@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    public function store (Request $request){
-        try{
+    public function store(Request $request)
+    {
+        try {
             $data = $request->all();
 
             $data['password'] = Hash::make($request->password);
@@ -21,10 +23,29 @@ class AdminController extends Controller
                 'message' => 'Admin cadastrado com sucesso',
                 'token' => $response
             ], 200);
-
-        } catch(\Throwable $th){
-
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
         }
-        
+    }
+
+    public function login(Request $request){
+        try{
+            if(Auth::guard('admins')->attempt([
+                'email' => $request-> email,
+                'password' => $request-> password
+            ])) {
+                
+            }
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+
     }
 }
