@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+
 use Symfony\Component\HttpFoundation\Response;
 
 class SetSanctumGuard
@@ -15,6 +16,9 @@ class SetSanctumGuard
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if(Str::startsWith($request->getRequestUri(), '/api/admin')){
+
+        }
         return $next($request);
     }
 }
