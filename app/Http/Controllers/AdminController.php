@@ -31,21 +31,32 @@ class AdminController extends Controller
         }
     }
 
-    public function login(Request $request){
-        try{
-            if(Auth::guard('admins')->attempt([
-                'email' => $request-> email,
-                'password' => $request-> password
+    public function login(Request $request)
+    {
+        try {
+            if (Auth::guard('admins')->attempt([
+                'email' => $request->email,
+                'password' => $request->password
             ])) {
-                
-            }
+                $user = Auth::guard('admins')->user();
 
+                $token = $user->createToken($request->server('HTTP_USER_AGENT', ['admins']))->plainTextToken;
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Login efetuado com sucesso',
+                    'token' => $token
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Credenciais incorretas'
+                ]);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
             ], 500);
         }
-
     }
 }
