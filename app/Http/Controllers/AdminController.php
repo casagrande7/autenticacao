@@ -59,4 +59,8 @@ class AdminController extends Controller
             ], 500);
         }
     }
+
+    public function verificaUsuarioLogado(Request $request){
+       
+    }
 }
